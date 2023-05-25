@@ -1,4 +1,4 @@
-package com.market.store.model.dto.response;
+package com.market.store.model.dto.response.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

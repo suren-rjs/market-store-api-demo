@@ -11,10 +11,11 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document("role")
-public class Role {
+@Document("product-categories")
+public class ProductCategory {
     @Id
     private String id;
     @NotNull
     private String name;
+    private String image;
 }

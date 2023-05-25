@@ -1,4 +1,4 @@
-package com.market.store.model.dto.request;
+package com.market.store.model.dto.request.auth;
 
 import com.market.store.model.enums.UserType;
 import lombok.AllArgsConstructor;

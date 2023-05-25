@@ -1,7 +1,7 @@
 package com.market.store.service;
 
 import com.market.store.model.document.User;
-import com.market.store.model.dto.request.SignUp;
+import com.market.store.model.dto.request.auth.SignUp;
 import com.market.store.repository.crud.UserRepository;
 import com.market.store.repository.data.UserDtoRepository;
 import org.springframework.beans.factory.annotation.Autowired;

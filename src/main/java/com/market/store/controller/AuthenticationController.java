@@ -2,10 +2,9 @@ package com.market.store.controller;
 
 import com.market.store.config.utils.JwtTokenProvider;
 import com.market.store.helper.GlobalCommonService;
-import com.market.store.model.document.User;
-import com.market.store.model.dto.request.Login;
-import com.market.store.model.dto.request.SignUp;
-import com.market.store.model.dto.response.JsonToken;
+import com.market.store.model.dto.request.auth.Login;
+import com.market.store.model.dto.request.auth.SignUp;
+import com.market.store.model.dto.response.auth.JsonToken;
 import com.market.store.repository.crud.UserRepository;
 import com.market.store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 import java.util.Timer;
 
 @SuppressWarnings("All")
@@ -75,29 +73,5 @@ public class AuthenticationController {
             userService.save(user);
         }
         return globalCommonService.getResponseEntityByMessageAndStatus(responseMessage, responseStatus);
-    }
-
-    @PutMapping("/user")
-    public ResponseEntity<?> updateUser(@RequestBody User user) {
-        String responseMessage;
-        HttpStatus responseStatus = HttpStatus.NOT_ACCEPTABLE;
-
-        Optional<User> existUser = userRepository.findOneByUsername(user.getUsername());
-        if (existUser.isPresent()) {
-            User existUserDetails = existUser.get();
-            user.setId(existUserDetails.getId());
-            userRepository.save(user);
-            responseStatus = HttpStatus.ACCEPTED;
-            responseMessage = "User details updated !";
-        } else {
-            responseMessage = "Invalid userid " + user.getUsername();
-        }
-        return globalCommonService.getResponseEntityByMessageAndStatus(responseMessage, responseStatus);
-    }
-
-    @GetMapping("/users")
-    public ResponseEntity<?> getAllUsers() {
-        HttpStatus responseStatus = HttpStatus.OK;
-        return new ResponseEntity<>(userRepository.findAll(), responseStatus);
     }
 }
