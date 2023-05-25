@@ -62,11 +62,9 @@ public class AuthenticationController {
         String responseMessage;
         HttpStatus responseStatus = HttpStatus.NOT_ACCEPTABLE;
 
-        boolean isExistUser = userRepository.findOneByPhone(user.getPhone()).isPresent() || userRepository.findOneByEmail(user.getEmail()).isPresent();
-        if (globalCommonService.validateEmail(user.getEmail())) {
-            responseMessage = "Invalid email";
-        } else if (isExistUser) {
-            responseMessage = !user.getUsername().contains("@") ? "Registered mobile number" : "Registered email id";
+        boolean isExistUser = userRepository.findOneByPhone(user.getPhone()).isPresent();
+        if (isExistUser) {
+            responseMessage = "Registered mobile number";
         } else {
             responseMessage = "New user created for " + user.getUsername();
             responseStatus = HttpStatus.CREATED;

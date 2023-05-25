@@ -16,15 +16,11 @@ import java.util.stream.Collectors;
 @Configuration
 public class CacheConfig {
 
-    private final List<String> cacheables = Arrays.stream(new String[]{"weather", "health", "user"}).collect(Collectors.toList());
+    private final List<String> cacheables = Arrays.stream(new String[]{"user"}).collect(Collectors.toList());
 
     @Bean
     public RedisCacheManagerBuilderCustomizer customizer() {
         return builder -> builder
-                .withCacheConfiguration("weather",
-                        RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(5)))
-                .withCacheConfiguration("health",
-                        RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(30)))
                 .withCacheConfiguration("user",
                         RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(1)));
     }
