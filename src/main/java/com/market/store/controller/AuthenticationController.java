@@ -36,14 +36,14 @@ public class AuthenticationController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<?> authenticateUser(@RequestBody Login login) {
-        if (login.getUsername().contains("@") && globalCommonService.validateEmail(login.getUsername()))
+        if (login.getPhone().contains("@") && globalCommonService.validateEmail(login.getPhone()))
             return globalCommonService.getResponseEntityByMessageAndStatus("Invalid email", HttpStatus.BAD_REQUEST);
 
         Authentication authentication;
         final String token;
         ResponseEntity<?> tokenResponseEntity;
         try {
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getPhone(), login.getUid()));
             // Todo: notification for login alert
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -57,21 +57,36 @@ public class AuthenticationController {
     }
 
 
-    @PostMapping("/user")
+    @PostMapping("/register")
     public ResponseEntity<?> saveUser(@RequestBody SignUp user) {
         String responseMessage;
         HttpStatus responseStatus = HttpStatus.NOT_ACCEPTABLE;
 
-        boolean isExistUsername = userRepository.findOneByUsername(user.getPhone()).isPresent() || userRepository.findOneByEmail(user.getEmail()).isPresent();
+        boolean isExistUser = userRepository.findOneByPhone(user.getPhone()).isPresent() || userRepository.findOneByEmail(user.getEmail()).isPresent();
         if (globalCommonService.validateEmail(user.getEmail())) {
             responseMessage = "Invalid email";
-        } else if (isExistUsername) {
+        } else if (isExistUser) {
             responseMessage = !user.getUsername().contains("@") ? "Registered mobile number" : "Registered email id";
         } else {
             responseMessage = "New user created for " + user.getUsername();
             responseStatus = HttpStatus.CREATED;
             userService.save(user);
         }
+        return globalCommonService.getResponseEntityByMessageAndStatus(responseMessage, responseStatus);
+    }
+
+//    @PostMapping("/verify-email")
+//    public ResponseEntity<?> verifyEmail() {
+//        String responseMessage = "Verification Success!";
+//        HttpStatus responseStatus = HttpStatus.OK;
+//        return globalCommonService.getResponseEntityByMessageAndStatus(responseMessage, responseStatus);
+//    }
+
+    @PutMapping("/changeActiveStatus/{id}")
+    public ResponseEntity<?> disableUser(@RequestParam("id") String id) {
+        String responseMessage = "User account has been disabled!";
+        HttpStatus responseStatus = HttpStatus.OK;
+        userService.changeActiveStatusById(id);
         return globalCommonService.getResponseEntityByMessageAndStatus(responseMessage, responseStatus);
     }
 }

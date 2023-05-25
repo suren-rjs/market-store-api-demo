@@ -21,15 +21,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final String[] PUBLIC_END_POINTS = {"/auth/**", "/v3/**", "/help/**", "/swagger-ui/**", "/notification/**", "/"};
+    private final String[] MANAGER_END_POINTS = {"/products/**", "/productCategories"};
+    private final String[] ADMIN_END_POINTS = {"/admin/**"};
     @Autowired
     private UserDetailsService userDetailsService;
-
     @Autowired
     private UnauthorisedEntryPoint unauthorisedEntryPoint;
-
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -41,9 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers("/admin/**").hasAnyRole("ADMIN")
-                .antMatchers("/tasks/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/auth/**", "/v3/**", "/help/**","/swagger-ui/**").permitAll().anyRequest().authenticated()
+                .antMatchers(ADMIN_END_POINTS).hasAnyRole("ADMIN")
+                .antMatchers(MANAGER_END_POINTS).hasAnyRole("ADMIN", "MANAGER")
+                .antMatchers(PUBLIC_END_POINTS).permitAll().anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(unauthorisedEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

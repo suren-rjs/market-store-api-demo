@@ -42,10 +42,11 @@ public class UserService implements UserDtoRepository, UserDetailsService {
     @Override
     public void save(SignUp signUp) {
         User user = new User();
-        user.setProfileName(signUp.getUsername());
         user.setUsername(signUp.getPhone());
+        user.setPhone(signUp.getPhone());
         user.setEmail(signUp.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(signUp.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(signUp.getUid()));
+        user.setActiveStatus(true);
 
         List<String> roles = new ArrayList<>();
 
@@ -60,6 +61,7 @@ public class UserService implements UserDtoRepository, UserDetailsService {
                 roles = List.of("CUSTOMER");
                 break;
         }
+
         user.setRoles(roles);
         userRepository.save(user);
     }
@@ -72,6 +74,14 @@ public class UserService implements UserDtoRepository, UserDetailsService {
     @Override
     public User findOneByUsername(String username) {
         return userRepository.findOneByUsername(username).orElse(null);
+    }
+
+    @Override
+    public void changeActiveStatusById(String id) {
+        User currentUser = userRepository.findOneById(id).orElse(null);
+        if (currentUser != null) {
+            currentUser.setActiveStatus(!currentUser.getActiveStatus());
+        }
     }
 }
 

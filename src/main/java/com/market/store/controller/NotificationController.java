@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @SuppressWarnings({"unused", "rawtypes"})
 @Controller
+@RequestMapping("/notification")
 public class NotificationController {
 
     @Autowired
@@ -24,7 +25,7 @@ public class NotificationController {
     private FcmTokenRepository fcmTokenRepository;
 
 
-    @PostMapping("/notification")
+    @PostMapping
     @ResponseBody
     public ResponseEntity<?> sendNotification(@RequestBody NotificationMessage notificationMessage,
                                               @RequestParam String topic) throws FirebaseMessagingException {
@@ -32,7 +33,7 @@ public class NotificationController {
         return globalCommonService.getResponseEntityByMessageAndStatus(message, HttpStatus.OK);
     }
 
-    @PostMapping("/notification/fcm")
+    @PostMapping("/fcm")
     @ResponseBody
     public ResponseEntity<?> addFcmToken(@RequestBody FcmToken token) {
         try {

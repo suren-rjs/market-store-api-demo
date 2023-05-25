@@ -17,16 +17,21 @@ import java.util.List;
 public class User {
     @Id
     private String id;
-    private String email;
     @NotNull
+    @JsonIgnore
     private String username;
+    @NotNull
+    private String phone;
     @NotNull
     @JsonIgnore
     private String password;
+    private String email;
     @NotNull
     private String profileName;
     private String profileImage;
     @NotNull
     @JsonIgnore
     private List<String> roles;
+    @JsonIgnore
+    private Boolean activeStatus;
 }
