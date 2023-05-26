@@ -23,9 +23,9 @@ public class ProductItem {
     private String description;
     @NotNull
     private String categoryId;
-    private int quantity;
-    private int stock;
+    private Integer quantity;
+    private Integer stock;
     private ProductDiscountType discountType;
-    private int discountInPercentage;
-    private int discountInPrice;
+    private Integer discountInPercentage;
+    private Integer discountInPrice;
 }

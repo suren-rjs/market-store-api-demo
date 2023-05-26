@@ -1,10 +1,12 @@
 package com.market.store.controller;
 
 import com.market.store.helper.GlobalCommonService;
-import com.market.store.model.dto.request.product.ProductItemDto;
+import com.market.store.model.dto.request.product.ProductItemDTO;
 import com.market.store.service.ProductService;
+import com.market.store.service.WishlistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +14,7 @@ import java.util.Optional;
 
 @SuppressWarnings("All")
 @RestController
-@RequestMapping("/products")
+@RequestMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProductController {
 
     @Autowired
@@ -21,17 +23,17 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    public ProductController() {
-    }
+    @Autowired
+    private WishlistService wishlistService;
 
     @PostMapping
-    public ResponseEntity<?> newProduct(@RequestBody ProductItemDto productItemDto) {
+    public ResponseEntity<?> newProduct(@RequestBody ProductItemDTO productItemDto) {
         productService.save(productItemDto);
         return globalCommonService.getResponseEntityByMessageAndStatus("New product added", HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateProduct(@RequestBody ProductItemDto productItemDto) {
+    public ResponseEntity<?> updateProduct(@RequestBody ProductItemDTO productItemDto) {
         String message = "Product updated";
         HttpStatus response = HttpStatus.OK;
         try {
@@ -45,7 +47,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@RequestParam("id") String id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") String id) {
         String message = "Product deleted";
         HttpStatus response = HttpStatus.OK;
         try {
@@ -59,7 +61,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@RequestParam("id") String id) {
+    public ResponseEntity<?> getById(@PathVariable("id") String id) {
         String message;
         HttpStatus response = HttpStatus.OK;
         try {
@@ -72,9 +74,13 @@ public class ProductController {
         return globalCommonService.getResponseEntityByMessageAndStatus(message, response);
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAllProducts() {
-        return globalCommonService.getResponseOfObject(Optional.of(productService.getAllProducts()), HttpStatus.OK);
+    @GetMapping("/wishlist")
+    public ResponseEntity<?> getWishlistProducts() {
+        return globalCommonService.getResponseOfObject(Optional.of(wishlistService.findAllByCustomerId()), HttpStatus.OK);
     }
 
+    @PutMapping("/wishlist/{id}")
+    public ResponseEntity<?> wishlistToggle(@PathVariable("id") String id) {
+        return globalCommonService.getResponseEntityByMessageAndStatus(wishlistService.toggleWishlist(id), HttpStatus.CREATED);
+    }
 }

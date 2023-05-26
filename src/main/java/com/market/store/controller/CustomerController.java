@@ -5,15 +5,16 @@ import com.market.store.model.document.User;
 import com.market.store.repository.crud.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @SuppressWarnings("All")
-@RequestMapping("/users")
+@RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
-public class UserController {
+public class CustomerController {
     @Autowired
     private GlobalCommonService globalCommonService;
     @Autowired
@@ -37,26 +38,9 @@ public class UserController {
         return globalCommonService.getResponseEntityByMessageAndStatus(responseMessage, responseStatus);
     }
 
-    @GetMapping("")
-    public ResponseEntity<?> getAllUsers() {
-        return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@RequestParam String id) {
-        String message = "Invalid user id";
-        HttpStatus status = HttpStatus.OK;
-        ResponseEntity<?> response;
-        try {
-            Optional<User> user = userRepository.findOneById(id);
-            if (user.isPresent()) {
-                return new ResponseEntity<>(user, status);
-            } else {
-                status = HttpStatus.NOT_FOUND;
-                throw new RuntimeException("User not found");
-            }
-        } catch (Exception e) {
-            return globalCommonService.getResponseEntityByMessageAndStatus(message, status);
-        }
+    @GetMapping("/myProfile")
+    public ResponseEntity<?> getCurrentUser() {
+        return new ResponseEntity<>(globalCommonService.getCurrentUser(), HttpStatus.OK);
     }
 }
+

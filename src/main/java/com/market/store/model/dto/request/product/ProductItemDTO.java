@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class ProductItemDto {
+public class ProductItemDTO {
     private String id;
     @NotNull
     private String vendorId;

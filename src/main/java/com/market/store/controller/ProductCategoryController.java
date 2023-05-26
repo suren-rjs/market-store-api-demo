@@ -6,6 +6,7 @@ import com.market.store.repository.crud.ProductCategoryRepository;
 import com.market.store.service.ProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @SuppressWarnings("All")
 @RestController
-@RequestMapping("/productCategories")
+@RequestMapping(value = "/productCategories", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProductCategoryController {
     @Autowired
     public GlobalCommonService globalCommonService;
@@ -30,7 +31,7 @@ public class ProductCategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCategoryById(@RequestParam String id) {
+    public ResponseEntity<?> getCategoryById(@PathVariable String id) {
         String message = "Invalid id";
         HttpStatus status = HttpStatus.NOT_FOUND;
         ProductCategory category = productCategoryService.getOneById(id).orElse(null);
@@ -62,7 +63,7 @@ public class ProductCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@RequestParam("id") String id) {
+    public ResponseEntity<?> deleteById(@PathVariable("id") String id) {
         String message = "Invalid id";
         HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
         if (productCategoryRepository.findOneById(id).isEmpty()) {

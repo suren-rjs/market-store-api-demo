@@ -77,11 +77,15 @@ public class UserService implements UserDtoRepository, UserDetailsService {
     }
 
     @Override
-    public void changeActiveStatusById(String id) {
-        User currentUser = userRepository.findOneById(id).orElse(null);
-        if (currentUser != null) {
-            currentUser.setActiveStatus(!currentUser.getActiveStatus());
+    public String changeActiveStatusById(String id) {
+        String message = "Invalid userId";
+        User userById = userRepository.findOneById(id).orElse(null);
+        if (userById != null) {
+            userById.setActiveStatus(!userById.getActiveStatus());
+            message = "User status hasbeen " + (userById.getActiveStatus() ? "Enabled" : "Disabled");
+            userRepository.save(userById);
         }
+        return message;
     }
 }
 

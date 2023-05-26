@@ -13,5 +13,5 @@ public interface UserDtoRepository {
 
     User findOneByUsername(String username);
 
-    void changeActiveStatusById(String id);
+    String changeActiveStatusById(String id);
 }

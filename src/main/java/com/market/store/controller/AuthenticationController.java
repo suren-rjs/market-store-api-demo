@@ -9,18 +9,22 @@ import com.market.store.repository.crud.UserRepository;
 import com.market.store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Timer;
 
 @SuppressWarnings("All")
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
     private final Timer timer = new Timer();
     @Autowired
@@ -79,12 +83,4 @@ public class AuthenticationController {
 //        HttpStatus responseStatus = HttpStatus.OK;
 //        return globalCommonService.getResponseEntityByMessageAndStatus(responseMessage, responseStatus);
 //    }
-
-    @PutMapping("/changeActiveStatus/{id}")
-    public ResponseEntity<?> disableUser(@RequestParam("id") String id) {
-        String responseMessage = "User account has been disabled!";
-        HttpStatus responseStatus = HttpStatus.OK;
-        userService.changeActiveStatusById(id);
-        return globalCommonService.getResponseEntityByMessageAndStatus(responseMessage, responseStatus);
-    }
 }

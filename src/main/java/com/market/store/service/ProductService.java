@@ -1,7 +1,7 @@
 package com.market.store.service;
 
 import com.market.store.model.document.ProductItem;
-import com.market.store.model.dto.request.product.ProductItemDto;
+import com.market.store.model.dto.request.product.ProductItemDTO;
 import com.market.store.repository.crud.ProductItemRepository;
 import com.market.store.repository.data.ProductDtoRepository;
 import org.modelmapper.ModelMapper;
@@ -24,7 +24,7 @@ public class ProductService implements ProductDtoRepository {
 
 
     @Override
-    public <S extends ProductItem> void save(ProductItemDto productItemDto) {
+    public <S extends ProductItem> void save(ProductItemDTO productItemDto) {
         ProductItem productItem = modelMapper.map(productItemDto, ProductItem.class);
         productItemRepository.save(productItem);
     }
@@ -39,7 +39,7 @@ public class ProductService implements ProductDtoRepository {
     }
 
     @Override
-    public <S extends ProductItem> void updateById(ProductItemDto updatedDetails) throws Exception {
+    public <S extends ProductItem> void updateById(ProductItemDTO updatedDetails) throws Exception {
         try {
             ProductItem productItem = getById(updatedDetails.getId()).orElse(null);
             if (productItem == null) throw new NotFoundException("Product not found");
@@ -61,7 +61,7 @@ public class ProductService implements ProductDtoRepository {
     }
 
     @Override
-    public List<ProductItem> getAllProducts() {
+    public <S extends ProductItem> List<ProductItem> getAllProducts() {
         return productItemRepository.findAll();
     }
 }
