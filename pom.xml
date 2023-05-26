@@ -140,6 +140,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>Market-Store-api</finalName>
     </build>
 
 </project>

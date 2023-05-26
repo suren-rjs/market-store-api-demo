@@ -1,0 +1,15 @@
+#
+# Build stage
+#
+FROM maven:3.8.4-openjdk-11 AS build
+COPY src /src
+COPY pom.xml /
+RUN mvn -f /pom.xml clean package
+
+#
+# Package stage
+#
+FROM adoptopenjdk:11-jre-hotspot
+EXPOSE 8080
+COPY --from=build target/Market-Store-api.jar Market-Store-api.jar
+ENTRYPOINT ["java", "-jar", "/Market-Store-api.jar"]
