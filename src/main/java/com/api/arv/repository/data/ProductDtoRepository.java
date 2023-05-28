@@ -18,4 +18,6 @@ public interface ProductDtoRepository {
     <S extends ProductItem> Optional<S> getById(String id) throws NotFoundException;
 
     <S extends ProductItem> List<ProductItem> getAllProducts();
+
+    void saveAll(List<ProductItemDTO> productItemDTOList);
 }

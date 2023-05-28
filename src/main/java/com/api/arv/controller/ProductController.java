@@ -4,12 +4,15 @@ import com.api.arv.helper.GlobalCommonService;
 import com.api.arv.model.dto.request.product.ProductItemDTO;
 import com.api.arv.service.ProductService;
 import com.api.arv.service.WishlistService;
+import com.api.arv.service.utils.MultipartFileToXLSXConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("All")
@@ -26,10 +29,24 @@ public class ProductController {
     @Autowired
     private WishlistService wishlistService;
 
+    @Autowired
+    private MultipartFileToXLSXConverter multipartFileToXLSXConverter;
+
     @PostMapping
     public ResponseEntity<?> newProduct(@RequestBody ProductItemDTO productItemDto) {
         productService.save(productItemDto);
         return globalCommonService.getResponseEntityByMessageAndStatus("New product added", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/bulkUpload")
+    public ResponseEntity<?> bulkUpload(@RequestBody MultipartFile multipartFile) {
+        try {
+            List<ProductItemDTO> productItemDTOList = multipartFileToXLSXConverter.convert(multipartFile);
+            productService.saveAll(productItemDTOList);
+            return globalCommonService.getResponseEntityByMessageAndStatus("Products Uploaded successfully!", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return globalCommonService.getResponseEntityByMessageAndStatus("Unable to upload", HttpStatus.CREATED);
+        }
     }
 
     @PutMapping

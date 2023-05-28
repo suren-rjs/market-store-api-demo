@@ -22,7 +22,6 @@ public class ProductService implements ProductDtoRepository {
     @Autowired
     private ProductItemRepository productItemRepository;
 
-
     @Override
     public <S extends ProductItem> void save(ProductItemDTO productItemDto) {
         ProductItem productItem = modelMapper.map(productItemDto, ProductItem.class);
@@ -63,5 +62,11 @@ public class ProductService implements ProductDtoRepository {
     @Override
     public <S extends ProductItem> List<ProductItem> getAllProducts() {
         return productItemRepository.findAll();
+    }
+
+    @Override
+    public void saveAll(List<ProductItemDTO> productItemDTOList) {
+        Iterable<ProductItem> iterableProductItems = () -> productItemDTOList.stream().map(productItemDTO -> modelMapper.map(productItemDTO, ProductItem.class)).iterator();
+        productItemRepository.saveAll(iterableProductItems);
     }
 }

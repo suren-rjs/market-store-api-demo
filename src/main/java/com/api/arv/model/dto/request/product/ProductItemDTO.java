@@ -15,9 +15,9 @@ public class ProductItemDTO {
     private String subCategory;
     private String subSubCategory;
     private String productVariation;
-    private Integer mrpPrice;
-    private Integer sellingPrice;
+    private Double mrpPrice;
+    private Double sellingPrice;
     private Integer quantity;
     private Integer stock;
-    private Integer discount;
+    private Double discount;
 }
