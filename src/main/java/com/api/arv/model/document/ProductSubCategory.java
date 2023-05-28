@@ -11,21 +11,12 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document("product-items")
-public class ProductItem {
+@Document("product-sub-categories")
+public class ProductSubCategory {
     @Id
     private String id;
     @NotNull
-    private String productName;
-    private String description;
-    @NotNull
     private String categoryId;
-    private String subCategoryId;
-    private String subSubCategoryId;
-    private String productVariation;
-    private Integer mrpPrice;
-    private Integer sellingPrice;
-    private Integer quantity;
-    private Integer stock;
-    private Integer discount;
+    @NotNull
+    private String name;
 }

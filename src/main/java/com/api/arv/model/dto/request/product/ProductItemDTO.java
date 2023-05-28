@@ -1,6 +1,5 @@
 package com.api.arv.model.dto.request.product;
 
-import com.api.arv.model.enums.ProductDiscountType;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -9,15 +8,16 @@ import javax.validation.constraints.NotNull;
 public class ProductItemDTO {
     private String id;
     @NotNull
-    private String vendorId;
-    @NotNull
-    private String name;
+    private String productName;
     private String description;
     @NotNull
-    private String categoryId;
-    private int quantity;
-    private int stock;
-    private ProductDiscountType discountType;
-    private int discountInPercentage;
-    private int discountInPrice;
+    private String category;
+    private String subCategory;
+    private String subSubCategory;
+    private String productVariation;
+    private Integer mrpPrice;
+    private Integer sellingPrice;
+    private Integer quantity;
+    private Integer stock;
+    private Integer discount;
 }

@@ -18,6 +18,6 @@ public class ArvApiApplication {
 
     @GetMapping
     public ResponseEntity<?> getService() {
-        return new ResponseEntity<>(new ResponseMessage("Welcome to store api."), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseMessage("Welcome to ARV api service."), HttpStatus.OK);
     }
 }
