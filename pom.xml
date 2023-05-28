@@ -8,15 +8,16 @@
         <version>2.7.12</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.market</groupId>
-    <artifactId>super</artifactId>
+    <groupId>com.api</groupId>
+    <artifactId>arv</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>super</name>
-    <description>Super market application</description>
+    <name>ARV Api Service</name>
+    <description>ARV Api Application</description>
     <properties>
         <java.version>11</java.version>
     </properties>
     <dependencies>
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -140,7 +141,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>Market-Store-api</finalName>
+        <finalName>avr-api</finalName>
     </build>
 
 </project>

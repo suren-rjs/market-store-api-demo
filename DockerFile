@@ -11,5 +11,5 @@ RUN mvn -f /pom.xml clean package
 #
 FROM adoptopenjdk:11-jre-hotspot
 EXPOSE 8080
-COPY --from=build target/Market-Store-api.jar Market-Store-api.jar
-ENTRYPOINT ["java", "-jar", "/Market-Store-api.jar"]
+COPY --from=build target/avr-api.jar avr-api.jar
+ENTRYPOINT ["java", "-jar", "/avr-api.jar"]
