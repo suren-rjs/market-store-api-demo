@@ -19,9 +19,8 @@ import java.util.Optional;
 @Service
 public class MultipartFileToXLSXConverter {
     public List<ProductItemDTO> convert(MultipartFile multipartFile) throws Exception {
-        try (InputStream inputStream = multipartFile.getInputStream();
-             Workbook workbook = new XSSFWorkbook(inputStream)) {
-            String outputFilePath = "/temp/uploaded-file.xlsx";
+        try (InputStream inputStream = multipartFile.getInputStream(); Workbook workbook = new XSSFWorkbook(inputStream)) {
+            String outputFilePath = "uploaded-file.xlsx";
             try (Workbook outputWorkbook = new XSSFWorkbook()) {
                 for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                     Sheet inputSheet = workbook.getSheetAt(i);
@@ -69,30 +68,33 @@ public class MultipartFileToXLSXConverter {
         Sheet sheet = uploadedData.get().getSheetAt(0);
         List<ProductItemDTO> productItemDTOList = new ArrayList<>();
         for (Row row : sheet) {
-            String name = row.getCell(0).getStringCellValue();
-            String description = row.getCell(1).getStringCellValue();
-            String category = row.getCell(2).getStringCellValue();
-            String subCategory = row.getCell(3).getStringCellValue();
-            String subSubCategory = row.getCell(4).getStringCellValue();
-            Double mrpPrice = row.getCell(5).getNumericCellValue();
-            Double sellingPrice = row.getCell(6).getNumericCellValue();
-            Double discount = row.getCell(7).getNumericCellValue();
-            String productVariation = row.getCell(8).getStringCellValue();
-            Integer stock = (int) row.getCell(9).getNumericCellValue();
+            if (row.getCell(0) == null || row.getRowNum() == 0) continue;
+            String id = row.getCell(0).getStringCellValue();
+            String name = row.getCell(1).getStringCellValue();
+            String description = row.getCell(2).getStringCellValue();
+            String category = row.getCell(3).getStringCellValue();
+            String subCategory = row.getCell(4).getStringCellValue();
+            String subSubCategory = row.getCell(5).getStringCellValue();
+            Double mrpPrice = row.getCell(6).getNumericCellValue();
+            Double sellingPrice = row.getCell(7).getNumericCellValue();
+            Double discount = row.getCell(8).getNumericCellValue();
+            String productVariation = row.getCell(9).getStringCellValue();
+            Integer stock = (int) row.getCell(10).getNumericCellValue();
 
-            ProductItemDTO data = new ProductItemDTO();
-            data.setProductName(name);
-            data.setDescription(description);
-            data.setCategory(category);
-            data.setSubCategory(subCategory);
-            data.setSubSubCategory(subSubCategory);
-            data.setMrpPrice(mrpPrice);
-            data.setSellingPrice(sellingPrice);
-            data.setDiscount(discount);
-            data.setProductVariation(productVariation);
-            data.setStock(stock);
+            ProductItemDTO itemDTO = new ProductItemDTO();
+            itemDTO.setId(id);
+            itemDTO.setProductName(name);
+            itemDTO.setDescription(description);
+            itemDTO.setCategoryId(category);
+            itemDTO.setSubCategoryId(subCategory);
+            itemDTO.setSubSubCategoryId(subSubCategory);
+            itemDTO.setMrpPrice(mrpPrice);
+            itemDTO.setSellingPrice(sellingPrice);
+            itemDTO.setDiscount(discount);
+            itemDTO.setProductVariation(productVariation);
+            itemDTO.setStock(stock);
 
-            productItemDTOList.add(data);
+            productItemDTOList.add(itemDTO);
         }
         return productItemDTOList;
     }

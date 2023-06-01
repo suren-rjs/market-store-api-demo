@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @SuppressWarnings("unused")
 public interface ProductCategoryDtoRepository {
-    void saveCategory(ProductCategory productCategory);
+    <S extends ProductCategory> ProductCategory saveCategory(ProductCategory productCategory);
 
     void deleteCategoryById(String id);
 
@@ -16,7 +16,7 @@ public interface ProductCategoryDtoRepository {
 
     <S extends ProductCategory> ProductCategory updateCategory(ProductCategory productCategory);
 
-    void saveSubCategory(ProductSubCategory productSubCategory);
+    <S extends ProductSubCategory> ProductSubCategory saveSubCategory(ProductSubCategory productSubCategory);
 
     void deleteSubCategoryById(String id);
 
@@ -24,11 +24,17 @@ public interface ProductCategoryDtoRepository {
 
     <S extends ProductSubCategory> ProductSubCategory updateSubCategory(ProductSubCategory productSubCategory);
 
-    void saveSubSubCategory(ProductSubSubCategory productSubSubCategory);
+    <S extends ProductSubSubCategory> ProductSubSubCategory saveSubSubCategory(ProductSubSubCategory productSubSubCategory);
 
     void deleteSubSubCategoryById(String id);
 
     <S extends ProductSubSubCategory> Optional<ProductSubSubCategory> getOneSubSubCategoryById(String id);
 
     <S extends ProductSubSubCategory> ProductSubSubCategory updateSubSubCategory(ProductSubSubCategory productSubSubCategory);
+
+    <S extends ProductCategory> Optional<ProductCategory> getOneCategoryByName(String name);
+
+    <S extends ProductSubCategory> Optional<ProductSubCategory> getOneSubCategoryByCategoryIdAndName(String categoryId, String name);
+
+    <S extends ProductSubSubCategory> Optional<ProductSubSubCategory> getOneSubSubCategoryByCategoryIdAndSubCategoryIdAndName(String categoryId, String subCategoryId, String name);
 }

@@ -152,7 +152,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>avr-api</finalName>
+        <finalName>arv-api</finalName>
     </build>
 
 </project>

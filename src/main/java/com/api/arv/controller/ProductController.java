@@ -45,7 +45,7 @@ public class ProductController {
             productService.saveAll(productItemDTOList);
             return globalCommonService.getResponseEntityByMessageAndStatus("Products Uploaded successfully!", HttpStatus.CREATED);
         } catch (Exception e) {
-            return globalCommonService.getResponseEntityByMessageAndStatus("Unable to upload", HttpStatus.CREATED);
+            return globalCommonService.getResponseEntityByMessageAndStatus("Unable to upload " + e.toString(), HttpStatus.CREATED);
         }
     }
 

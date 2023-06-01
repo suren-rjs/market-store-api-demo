@@ -1,6 +1,9 @@
 package com.api.arv.service;
 
+import com.api.arv.model.document.ProductCategory;
 import com.api.arv.model.document.ProductItem;
+import com.api.arv.model.document.ProductSubCategory;
+import com.api.arv.model.document.ProductSubSubCategory;
 import com.api.arv.model.dto.request.product.ProductItemDTO;
 import com.api.arv.repository.crud.ProductItemRepository;
 import com.api.arv.repository.data.ProductDtoRepository;
@@ -17,8 +20,9 @@ import java.util.Optional;
 public class ProductService implements ProductDtoRepository {
 
     @Autowired
+    protected ProductCategoryService productCategoryService;
+    @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private ProductItemRepository productItemRepository;
 
@@ -66,7 +70,56 @@ public class ProductService implements ProductDtoRepository {
 
     @Override
     public void saveAll(List<ProductItemDTO> productItemDTOList) {
+        for (ProductItemDTO productItemDTO : productItemDTOList) {
+            String categoryName = productItemDTO.getCategoryId();
+            String subCategoryName = productItemDTO.getSubCategoryId();
+            String subSubCategoryName = productItemDTO.getSubSubCategoryId();
+
+            String categoryId = getCategoryId(categoryName);
+            String subCategoryId = getSubCategoryId(categoryId, subCategoryName);
+            String subSubCategoryId = getSubSubCategoryId(categoryId, subCategoryId, subSubCategoryName);
+
+            productItemDTO.setCategoryId(categoryId);
+            productItemDTO.setSubCategoryId(subCategoryId);
+            productItemDTO.setSubSubCategoryId(subSubCategoryId);
+        }
         Iterable<ProductItem> iterableProductItems = () -> productItemDTOList.stream().map(productItemDTO -> modelMapper.map(productItemDTO, ProductItem.class)).iterator();
         productItemRepository.saveAll(iterableProductItems);
+    }
+
+    private String getCategoryId(String name) {
+        Optional<ProductCategory> productCategory = productCategoryService.getOneCategoryByName(name);
+
+        if (productCategory.isPresent()) return productCategory.get().getId();
+
+        ProductCategory newProductCategory = new ProductCategory();
+        newProductCategory.setName(name);
+        newProductCategory = productCategoryService.saveCategory(newProductCategory);
+        return newProductCategory.getId();
+    }
+
+    private String getSubCategoryId(String categoryId, String name) {
+        Optional<ProductSubCategory> productSubCategory = productCategoryService.getOneSubCategoryByCategoryIdAndName(categoryId, name);
+
+        if (productSubCategory.isPresent()) return productSubCategory.get().getId();
+
+        ProductSubCategory subCategory = new ProductSubCategory();
+        subCategory.setName(name);
+        subCategory.setCategoryId(categoryId);
+        subCategory = productCategoryService.saveSubCategory(subCategory);
+        return subCategory.getId();
+    }
+
+    private String getSubSubCategoryId(String categoryId, String subCategoryId, String name) {
+        Optional<ProductSubSubCategory> productSubSubCategory = productCategoryService.getOneSubSubCategoryByCategoryIdAndSubCategoryIdAndName(categoryId, subCategoryId, name);
+
+        if (productSubSubCategory.isPresent()) return productSubSubCategory.get().getId();
+
+        ProductSubSubCategory subSubCategory = new ProductSubSubCategory();
+        subSubCategory.setName(name);
+        subSubCategory.setCategoryId(categoryId);
+        subSubCategory.setSubCategoryId(subCategoryId);
+        subSubCategory = productCategoryService.saveSubSubCategory(subSubCategory);
+        return subSubCategory.getId();
     }
 }

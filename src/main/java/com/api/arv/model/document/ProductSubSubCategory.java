@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document("product-sub-categories")
+@Document("product-sub-sub-categories")
 public class ProductSubSubCategory {
     @Id
     private String id;
