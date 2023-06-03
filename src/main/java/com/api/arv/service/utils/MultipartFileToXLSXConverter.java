@@ -71,15 +71,15 @@ public class MultipartFileToXLSXConverter {
             if (row.getCell(0) == null || row.getRowNum() == 0) continue;
             String id = row.getCell(0).getStringCellValue();
             String name = row.getCell(1).getStringCellValue();
-            String description = row.getCell(2).getStringCellValue();
+            String description = (String) getValueByIndex(row, 2, "-");
             String category = row.getCell(3).getStringCellValue();
-            String subCategory = row.getCell(4).getStringCellValue();
-            String subSubCategory = row.getCell(5).getStringCellValue();
-            Double mrpPrice = row.getCell(6).getNumericCellValue();
-            Double sellingPrice = row.getCell(7).getNumericCellValue();
-            Double discount = row.getCell(8).getNumericCellValue();
-            String productVariation = row.getCell(9).getStringCellValue();
-            Integer stock = (int) row.getCell(10).getNumericCellValue();
+            String subCategory = getValueByIndex(row, 4, null) == null ? category : row.getCell(4).getStringCellValue();
+            String subSubCategory = getValueByIndex(row, 5, null) == null ? subCategory : row.getCell(5).getStringCellValue();
+            Double mrpPrice = (Double) getValueByIndex(row, 6, (double) 0);
+            Double sellingPrice = (Double) getValueByIndex(row, 7, (double) 0);
+            Double discount = (Double) getValueByIndex(row, 8, (double) 0);
+            String productVariation = (String) getValueByIndex(row, 9, "-");
+            Integer stock = getIntegerValue(row, 10);
 
             ProductItemDTO itemDTO = new ProductItemDTO();
             itemDTO.setId(id);
@@ -97,5 +97,21 @@ public class MultipartFileToXLSXConverter {
             productItemDTOList.add(itemDTO);
         }
         return productItemDTOList;
+    }
+
+    private Object getValueByIndex(Row row, int index, Object defaultValue) {
+        try {
+            return row.getCell(index).getNumericCellValue();
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    private Integer getIntegerValue(Row row, int index) {
+        try {
+            return (int) row.getCell(index).getNumericCellValue();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }

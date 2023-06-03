@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,11 +42,22 @@ public class ProductController {
     @PostMapping("/bulkUpload")
     public ResponseEntity<?> bulkUpload(@RequestBody MultipartFile multipartFile) {
         try {
-            List<ProductItemDTO> productItemDTOList = multipartFileToXLSXConverter.convert(multipartFile);
-            productService.saveAll(productItemDTOList);
+            List<ProductItemDTO> productItemDTOList = new ArrayList<>();
+            try {
+                productItemDTOList = multipartFileToXLSXConverter.convert(multipartFile);
+            } catch (Exception e) {
+                return globalCommonService.getResponseEntityByMessageAndStatus("Exception while conversion : " + e.toString(), HttpStatus.NOT_ACCEPTABLE);
+            }
+
+            try {
+                productService.saveAll(productItemDTOList);
+            } catch (Exception e) {
+                return globalCommonService.getResponseEntityByMessageAndStatus("Exception while save : " + e.toString(), HttpStatus.NOT_ACCEPTABLE);
+            }
+
             return globalCommonService.getResponseEntityByMessageAndStatus("Products Uploaded successfully!", HttpStatus.CREATED);
         } catch (Exception e) {
-            return globalCommonService.getResponseEntityByMessageAndStatus("Unable to upload " + e.toString(), HttpStatus.CREATED);
+            return globalCommonService.getResponseEntityByMessageAndStatus("Unable to upload " + e.toString(), HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
