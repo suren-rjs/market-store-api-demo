@@ -29,6 +29,19 @@ public class ProductService implements ProductDtoRepository {
     @Override
     public <S extends ProductItem> void save(ProductItemDTO productItemDto) {
         ProductItem productItem = modelMapper.map(productItemDto, ProductItem.class);
+
+        String categoryName = productItemDto.getCategoryId();
+        String subCategoryName = productItemDto.getSubCategoryId() == null ? categoryName : productItemDto.getSubCategoryId();
+        String subSubCategoryName = productItemDto.getSubSubCategoryId() == null ? subCategoryName : productItemDto.getSubSubCategoryId();
+
+        String categoryId = getCategoryId(categoryName);
+        String subCategoryId = getSubCategoryId(categoryId, subCategoryName);
+        String subSubCategoryId = getSubSubCategoryId(categoryId, subCategoryId, subSubCategoryName);
+
+        productItem.setCategoryId(categoryId);
+        productItem.setSubCategoryId(subCategoryId);
+        productItem.setSubSubCategoryId(subSubCategoryId);
+
         productItemRepository.save(productItem);
     }
 

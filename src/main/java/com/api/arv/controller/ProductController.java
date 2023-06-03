@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,12 +41,7 @@ public class ProductController {
     @PostMapping("/bulkUpload")
     public ResponseEntity<?> bulkUpload(@RequestBody MultipartFile multipartFile) {
         try {
-            List<ProductItemDTO> productItemDTOList = new ArrayList<>();
-            try {
-                productItemDTOList = multipartFileToXLSXConverter.convert(multipartFile);
-            } catch (Exception e) {
-                return globalCommonService.getResponseEntityByMessageAndStatus("Exception while conversion : " + e.toString(), HttpStatus.NOT_ACCEPTABLE);
-            }
+            List<ProductItemDTO> productItemDTOList = multipartFileToXLSXConverter.convert(multipartFile);
 
             try {
                 productService.saveAll(productItemDTOList);
