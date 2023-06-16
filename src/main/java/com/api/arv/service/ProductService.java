@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +59,7 @@ public class ProductService implements ProductDtoRepository {
     public <S extends ProductItem> void updateById(ProductItemDTO updatedDetails) throws Exception {
         try {
             ProductItem productItem = getById(updatedDetails.getId()).orElse(null);
-            if (productItem == null) throw new NotFoundException("Product not found");
+            if (productItem == null) throw new NotFoundException("ProductItem not found");
             productItem = modelMapper.map(updatedDetails, ProductItem.class);
             productItemRepository.save(productItem);
         } catch (Exception e) {
@@ -72,7 +73,7 @@ public class ProductService implements ProductDtoRepository {
         if (productItem.isPresent()) {
             return productItemRepository.findOneById(id);
         } else {
-            throw new NotFoundException("Product not exist");
+            throw new NotFoundException("ProductItem not exist");
         }
     }
 
@@ -98,6 +99,33 @@ public class ProductService implements ProductDtoRepository {
         }
         Iterable<ProductItem> iterableProductItems = () -> productItemDTOList.stream().map(productItemDTO -> modelMapper.map(productItemDTO, ProductItem.class)).iterator();
         productItemRepository.saveAll(iterableProductItems);
+    }
+
+    @Override
+    public List<ProductItem> search(String keyword, double priceFrom, double priceTo) {
+        List<ProductItem> productsByNameOrDescription = productItemRepository.findByProductNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword);
+        List<ProductItem> productsBySellingPrice = productItemRepository.findBySellingPriceBetween(priceFrom - 1, priceTo + 1);
+        List<ProductItem> productsByMrpPrice = productItemRepository.findByMrpPriceBetween(priceFrom - 1, priceTo + 1);
+        List<ProductItem> productsByMinSellingPrice = productItemRepository.findBySellingPriceGreaterThanEqual(priceFrom - 1);
+        List<ProductItem> productsByMinMrpPrice = productItemRepository.findByMrpPriceGreaterThanEqual(priceFrom - 1);
+        List<ProductItem> productsByMaxSellingPrice = productItemRepository.findBySellingPriceLessThanEqual(priceTo + 1);
+        List<ProductItem> productsByMaxMrpPrice = productItemRepository.findByMrpPriceLessThanEqual(priceTo + 1);
+        List<ProductItem> filteredProducts = new ArrayList<>(productsByNameOrDescription);
+
+        if (priceFrom == 0 && priceTo == 0) {
+            return filteredProducts;
+        } else if (priceFrom == 0) {
+            filteredProducts.retainAll(productsByMaxSellingPrice);
+            filteredProducts.retainAll(productsByMaxMrpPrice);
+        } else if (priceTo == 0) {
+            filteredProducts.retainAll(productsByMinSellingPrice);
+            filteredProducts.retainAll(productsByMinMrpPrice);
+        } else {
+            filteredProducts.retainAll(productsBySellingPrice);
+            filteredProducts.retainAll(productsByMrpPrice);
+        }
+
+        return filteredProducts;
     }
 
     private String getCategoryId(String name) {

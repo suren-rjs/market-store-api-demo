@@ -46,8 +46,11 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<?> getAllUsers() {
-        return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<?> getAllUsers(@RequestParam String keyword) {
+        if (!keyword.replaceAll(" ", "").isEmpty()) {
+            return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(userRepository.findByUsernameContainingIgnoreCaseOrProfileNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword), HttpStatus.OK);
     }
 
     @PutMapping("/changeActiveStatus/{id}")
