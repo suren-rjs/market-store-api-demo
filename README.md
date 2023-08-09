@@ -8,7 +8,7 @@ Super Market App API
 ## Installation
 Clone Project
 ```bash
-git clone https://github.com/suren-rjs/market-store--api-demo.git
+git clone https://github.com/suren-rjs/market-store-api-demo.git
 ```
 
 - Open project on Intellij Idea, it will install all required dependencies itself. 
